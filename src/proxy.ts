@@ -4,7 +4,7 @@ import { decrypt } from './lib/auth';
 const protectedRoutes = ['/dashboard/doctor', '/dashboard/patient'];
 const publicRoutes = ['/auth/login', '/auth/signup', '/'];
 
-export default async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.some((route) => path.startsWith(route));
   const isPublicRoute = publicRoutes.includes(path);
