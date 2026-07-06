@@ -3,15 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  // Pooled connection (used by the app at runtime)
-  url       = env("DATABASE_URL")
-  // Direct connection (used for migrations; Neon "unpooled" string)
-  directUrl = env("DIRECT_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   name      String
   email     String   @unique
   password  String
@@ -20,13 +17,13 @@ model User {
 
   doctorProfile         DoctorProfile?
   availability          Availability[]
-  appointmentsAsDoctor  Appointment[] @relation("DoctorAppointments")
-  appointmentsAsPatient Appointment[] @relation("PatientAppointments")
+  appointmentsAsDoctor  Appointment[]  @relation("DoctorAppointments")
+  appointmentsAsPatient Appointment[]  @relation("PatientAppointments")
   notifications         Notification[]
 }
 
 model DoctorProfile {
-  id             String  @id @default(cuid())
+  id             String  @id @default(cuid()) @map("_id")
   userId         String  @unique
   user           User    @relation(fields: [userId], references: [id])
   photo          String?
@@ -36,7 +33,7 @@ model DoctorProfile {
 }
 
 model Availability {
-  id          String       @id @default(cuid())
+  id          String       @id @default(cuid()) @map("_id")
   doctorId    String
   doctor      User         @relation(fields: [doctorId], references: [id])
   date        DateTime
@@ -47,20 +44,20 @@ model Availability {
 }
 
 model Appointment {
-  id        String            @id @default(cuid())
+  id        String       @id @default(cuid()) @map("_id")
   doctorId  String
-  doctor    User              @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  doctor    User         @relation("DoctorAppointments", fields: [doctorId], references: [id])
   patientId String
-  patient   User              @relation("PatientAppointments", fields: [patientId], references: [id])
-  slotId    String            @unique
-  slot      Availability      @relation(fields: [slotId], references: [id])
+  patient   User         @relation("PatientAppointments", fields: [patientId], references: [id])
+  slotId    String       @unique
+  slot      Availability @relation(fields: [slotId], references: [id])
   concern   String
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
+  status    String       @default("PENDING")
+  createdAt DateTime     @default(now())
 }
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   message   String
