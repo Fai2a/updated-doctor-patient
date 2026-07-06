@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MediBook — Design System
+   A refined, medical-grade design language:
+   calm blues + teal, soft elevation, and quiet motion.
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --background: #f4f7fb;
+  --foreground: #0b1220;
+  --card: #ffffff;
+  --card-foreground: #0b1220;
+  --popover: #ffffff;
+  --popover-foreground: #0b1220;
+
+  /* Brand */
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --brand-from: #4f46e5;
+  --brand-via: #2563eb;
+  --brand-to: #06b6d4;
+
+  /* Neutrals */
+  --secondary: #eef2f8;
+  --secondary-foreground: #1e293b;
+  --muted: #eef2f8;
+  --muted-foreground: #64748b;
+  --accent: #e8effb;
+  --accent-foreground: #1e40af;
+
+  /* Semantic */
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --warning: #f59e0b;
+
+  /* Lines & rings */
+  --border: #e3e9f2;
+  --input: #e3e9f2;
+  --ring: #2563eb;
+
+  /* Shape */
+  --radius: 0.9rem;
+
+  /* Elevation — soft, layered, cool-tinted */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 8px 24px -8px rgba(15, 23, 42, 0.12);
+  --shadow-lg: 0 20px 45px -15px rgba(15, 23, 42, 0.18);
+  --shadow-glow: 0 12px 34px -12px rgba(37, 99, 235, 0.45);
+}
+
+.dark {
+  --background: #070b16;
+  --foreground: #eef2f9;
+  --card: #0e1524;
+  --card-foreground: #eef2f9;
+  --popover: #0e1524;
+  --popover-foreground: #eef2f9;
+
+  --primary: #3b82f6;
+  --primary-foreground: #061024;
+  --brand-from: #6366f1;
+  --brand-via: #3b82f6;
+  --brand-to: #22d3ee;
+
+  --secondary: #151f33;
+  --secondary-foreground: #e2e8f0;
+  --muted: #151f33;
+  --muted-foreground: #93a4bd;
+  --accent: #16233f;
+  --accent-foreground: #bfdbfe;
+
+  --destructive: #f87171;
+  --destructive-foreground: #1a0808;
+  --success: #34d399;
+  --warning: #fbbf24;
+
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #3b82f6;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 10px -2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 55px -18px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 14px 40px -12px rgba(59, 130, 246, 0.5);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+
+  --shadow-soft: var(--shadow-sm);
+  --shadow-elevated: var(--shadow-md);
+  --shadow-float: var(--shadow-lg);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Ambient light: soft brand glows behind the app */
+  background-image:
+    radial-gradient(60rem 60rem at 110% -10%, rgba(37, 99, 235, 0.08), transparent 60%),
+    radial-gradient(48rem 48rem at -10% 10%, rgba(6, 182, 212, 0.07), transparent 55%);
+  background-attachment: fixed;
+}
+
+/* ---------- Reusable surface utilities ---------- */
+
+.glass {
+  background: color-mix(in oklab, var(--card) 72%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+}
+
+.brand-gradient {
+  background-image: linear-gradient(135deg, var(--brand-from), var(--brand-via) 55%, var(--brand-to));
+}
+
+.brand-text {
+  background-image: linear-gradient(120deg, var(--brand-from), var(--brand-via) 50%, var(--brand-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card-surface {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Lift on hover — quiet and premium */
+.lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease;
+  will-change: transform;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Gradient hairline ring used for feature highlights */
+.ring-brand {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent),
+    var(--shadow-md);
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-slide-up { animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out both; }
+.animate-scale-in { animation: scaleIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-float { animation: floaty 6s ease-in-out infinite; }
+.animate-toast { animation: toastIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Stagger helper: add .stagger to a parent, children fade up in sequence */
+.stagger > * { animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger > *:nth-child(4) { animation-delay: 0.22s; }
+.stagger > *:nth-child(5) { animation-delay: 0.28s; }
+.stagger > *:nth-child(6) { animation-delay: 0.34s; }
+.stagger > *:nth-child(7) { animation-delay: 0.40s; }
+.stagger > *:nth-child(8) { animation-delay: 0.46s; }
+
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--muted) 80%, var(--card));
+  border-radius: 0.75rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--card) 65%, transparent),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Forms ---------- */
+
+input, textarea, select {
+  color: var(--foreground);
+}
+input::placeholder, textarea::placeholder {
+  color: color-mix(in oklab, var(--muted-foreground) 85%, transparent);
+}
+
+/* Consistent, accessible focus ring across the app */
+.focus-ring:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px color-mix(in oklab, var(--ring) 60%, transparent);
+}
+
+/* Date/select controls should honor dark mode */
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.85);
+}
+
+/* ---------- Scrollbar ---------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--muted-foreground) 40%, transparent) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--muted-foreground) 55%, transparent);
+  background-clip: content-box;
+}

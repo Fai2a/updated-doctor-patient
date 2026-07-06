@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String
+  createdAt DateTime @default(now())
+
+  doctorProfile         DoctorProfile?
+  availability          Availability[]
+  appointmentsAsDoctor  Appointment[] @relation("DoctorAppointments")
+  appointmentsAsPatient Appointment[] @relation("PatientAppointments")
+  notifications         Notification[]
+}
+
+model DoctorProfile {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  user           User    @relation(fields: [userId], references: [id])
+  photo          String?
+  specialization String
+  experience     Int
+  bio            String?
+}
+
+model Availability {
+  id          String       @id @default(cuid())
+  doctorId    String
+  doctor      User         @relation(fields: [doctorId], references: [id])
+  date        DateTime
+  startTime   String
+  endTime     String
+  isBooked    Boolean      @default(false)
+  appointment Appointment?
+}
+
+model Appointment {
+  id        String            @id @default(cuid())
+  doctorId  String
+  doctor    User              @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  patientId String
+  patient   User              @relation("PatientAppointments", fields: [patientId], references: [id])
+  slotId    String            @unique
+  slot      Availability      @relation(fields: [slotId], references: [id])
+  concern   String
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
