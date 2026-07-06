@@ -38,23 +38,20 @@ export async function POST(request: Request) {
   }
 
   // Create appointment and mark slot as booked
-  const appointment = await prisma.$transaction(async (tx) => {
-    const appt = await tx.appointment.create({
-      data: {
-        doctorId,
-        patientId: session.userId,
-        slotId,
-        concern,
-        status: 'PENDING',
-      },
-    });
+  // Note: sequential calls instead of $transaction for MongoDB free-tier compatibility
+  const appointment = await prisma.appointment.create({
+    data: {
+      doctorId,
+      patientId: session.userId,
+      slotId,
+      concern,
+      status: 'PENDING',
+    },
+  });
 
-    await tx.availability.update({
-      where: { id: slotId },
-      data: { isBooked: true },
-    });
-
-    return appt;
+  await prisma.availability.update({
+    where: { id: slotId },
+    data: { isBooked: true },
   });
 
   return NextResponse.json(appointment);
