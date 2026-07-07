@@ -11,15 +11,22 @@ export const dynamic = 'force-dynamic';
  * safe summary is returned to the caller.
  */
 export async function GET() {
-  const hasDbUrl = Boolean(process.env.DATABASE_URL);
+  // Both are required in production. Report presence (never the values).
+  const env = {
+    DATABASE_URL: Boolean(process.env.DATABASE_URL),
+    JWT_SECRET: Boolean(process.env.JWT_SECRET),
+  };
 
   try {
     // MongoDB ping via Prisma raw command — cheap and doesn't touch app data.
     await prisma.$runCommandRaw({ ping: 1 });
     return NextResponse.json({
-      status: 'ok',
+      status: env.JWT_SECRET ? 'ok' : 'degraded',
       database: 'connected',
-      env: { DATABASE_URL: hasDbUrl },
+      env,
+      hint: env.JWT_SECRET
+        ? undefined
+        : 'Database is fine, but JWT_SECRET is missing — login/signup will 500 until you set it in Vercel and redeploy.',
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
@@ -28,11 +35,11 @@ export async function GET() {
       {
         status: 'error',
         database: 'unreachable',
-        // Signals the two most common misconfigurations without leaking secrets.
-        env: { DATABASE_URL: hasDbUrl },
-        hint: hasDbUrl
-          ? 'DATABASE_URL is set but the connection failed — check Atlas Network Access (allow 0.0.0.0/0) and the DB user credentials.'
-          : 'DATABASE_URL is NOT set in this environment — add it in Vercel → Settings → Environment Variables, then redeploy.',
+        // Signals the most common misconfigurations without leaking secrets.
+        env,
+        hint: !env.DATABASE_URL
+          ? 'DATABASE_URL is NOT set in this environment — add it in Vercel → Settings → Environment Variables, then redeploy.'
+          : 'DATABASE_URL is set but the connection failed — check Atlas Network Access (allow 0.0.0.0/0) and the DB user credentials.',
         errorName: error instanceof Error ? error.name : 'UnknownError',
         timestamp: new Date().toISOString(),
       },
