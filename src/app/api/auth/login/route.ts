@@ -1,12 +1,17 @@
 import { prisma } from '@/lib/prisma';
 import { encrypt } from '@/lib/auth';
+import { handleApiError, readJson } from '@/lib/api';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password } = await readJson(request);
+
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    }
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
@@ -24,8 +29,7 @@ export async function POST(request: Request) {
     (await cookies()).set('session', session, { expires, httpOnly: true, path: '/' });
 
     return NextResponse.json({ user: { id: user.id, name: user.name, role: user.role } });
-  } catch (error: any) {
-    console.error('Login error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error) {
+    return handleApiError('POST /api/auth/login', error);
   }
 }
