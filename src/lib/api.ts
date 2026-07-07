@@ -18,12 +18,12 @@ export function handleApiError(context: string, error: unknown): NextResponse {
   // Log the full error with a stable, searchable prefix.
   console.error(`[API_ERROR] ${context}:`, error);
 
-  // Database is unreachable / misconfigured (missing DATABASE_URL, Atlas
+  // Database is unreachable / misconfigured (missing MONGODB_URI, Atlas
   // network block, bad credentials). This is a server/infra problem, so 503.
   if (error instanceof Prisma.PrismaClientInitializationError) {
     return NextResponse.json(
       {
-        error: 'Database connection failed. Check DATABASE_URL and Atlas network access.',
+        error: 'Database connection failed. Check MONGODB_URI and Atlas network access.',
         code: 'DB_CONNECTION',
       },
       { status: 503 }

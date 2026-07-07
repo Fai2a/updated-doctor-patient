@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   // Both are required in production. Report presence (never the values).
   const env = {
-    DATABASE_URL: Boolean(process.env.DATABASE_URL),
+    MONGODB_URI: Boolean(process.env.MONGODB_URI),
     JWT_SECRET: Boolean(process.env.JWT_SECRET),
   };
 
@@ -37,9 +37,9 @@ export async function GET() {
         database: 'unreachable',
         // Signals the most common misconfigurations without leaking secrets.
         env,
-        hint: !env.DATABASE_URL
-          ? 'DATABASE_URL is NOT set in this environment — add it in Vercel → Settings → Environment Variables, then redeploy.'
-          : 'DATABASE_URL is set but the connection failed — check Atlas Network Access (allow 0.0.0.0/0) and the DB user credentials.',
+        hint: !env.MONGODB_URI
+          ? 'MONGODB_URI is NOT set in this environment — add it in Vercel → Settings → Environment Variables, then redeploy.'
+          : 'MONGODB_URI is set but the connection failed — check Atlas Network Access (allow 0.0.0.0/0) and the DB user credentials.',
         errorName: error instanceof Error ? error.name : 'UnknownError',
         timestamp: new Date().toISOString(),
       },
